@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMA — Secure Social Architecture &amp; Private Expression Vault</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366F1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2L2 7l10 5 10-5-10-5z'/><path d='M2 17l10 5 10-5'/><path d='M2 12l10 5 10-5'/></svg>">
+</head>
+<body class="dark-theme">
+    <!-- Top Enterprise Navigation -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand" onclick="navigateTo('feed')">
+                <div class="brand-logo">
+                    <!-- Crisp geometric prism SVG emblem -->
+                    <svg class="brand-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
+                        <line x1="12" y1="22" x2="12" y2="15.5"></line>
+                        <polyline points="22 8.5 12 15.5 2 8.5"></polyline>
+                        <polyline points="2 15.5 12 8.5 22 15.5"></polyline>
+                        <line x1="12" y1="2" x2="12" y2="8.5"></line>
+                    </svg>
+                    <span class="logo-text">LUMA</span>
+                </div>
+                <span class="brand-badge">Enterprise Edition</span>
+            </div>
+
+            <!-- Global Search Input -->
+            <div class="search-bar-container">
+                <svg class="search-icon svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="globalSearchInput" placeholder="Search verified creators, publications, or tags..." onkeyup="handleGlobalSearch(event)">
+            </div>
+
+            <!-- Top Actions -->
+            <div class="header-actions">
+                <!-- Evaluation Demo Account Switcher -->
+                <div class="demo-switcher">
+                    <svg class="svg-icon-xs text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <polyline points="17 11 19 13 23 9"></polyline>
+                    </svg>
+                    <span class="demo-label">Identity:</span>
+                    <select id="demoUserSelect" onchange="quickSwitchUser(this.value)">
+                        <option value="hari">Hari Chandhana (hari)</option>
+                        <option value="sarah_art">Sarah Jenkins (sarah_art)</option>
+                        <option value="alex_dev">Alex Rivera (alex_dev)</option>
+                        <option value="maya_travels">Maya Lin (maya_travels)</option>
+                    </select>
+                </div>
+
+                <!-- Vault Direct Access Button -->
+                <button class="btn btn-glow-vault" onclick="navigateTo('vault')">
+                    <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span>LUMA Vault</span>
+                </button>
+
+                <!-- Notifications Center -->
+                <div class="notification-trigger" onclick="navigateTo('notifications')" title="Notifications">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="notification-badge" id="unreadNotifBadge" style="display: none;">0</span>
+                </div>
+
+                <!-- User Dropdown Menu -->
+                <div class="user-menu-wrapper" id="userMenuWrapper">
+                    <div class="user-avatar-pill" onclick="toggleUserDropdown()">
+                        <img src="" alt="Avatar" id="navUserAvatar" class="avatar-sm">
+                        <span id="navUsername">User</span>
+                        <svg class="caret-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="user-dropdown-menu" id="userDropdownMenu">
+                        <div class="dropdown-header">
+                            <strong id="dropdownFullName">Full Name</strong>
+                            <span id="dropdownHandle">@handle</span>
+                        </div>
+                        <hr>
+                        <a href="javascript:void(0)" onclick="navigateTo('profile')">
+                            <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            <span>Profile Overview</span>
+                        </a>
+                        <a href="javascript:void(0)" onclick="navigateTo('saved')">
+                            <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                            <span>Saved Archives</span>
+                        </a>
+                        <a href="javascript:void(0)" onclick="navigateTo('vault')">
+                            <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            <span>LUMA Private Vault</span>
+                        </a>
+                        <a href="javascript:void(0)" onclick="openChangePinModal()">
+                            <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-1.5 1.5L16 7l-4 4-2-2-4 4 2 2-3 3 1.5 1.5L8 18l4-4 2 2 4-4 1.5-1.5z"></path></svg>
+                            <span>Configure Master PIN</span>
+                        </a>
+                        <hr>
+                        <a href="javascript:void(0)" class="text-danger" onclick="logout()">
+                            <svg class="svg-icon-sm text-danger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                            <span>Sign Out</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Application Shell -->
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar-nav">
+            <nav class="nav-links">
+                <a href="javascript:void(0)" class="nav-item active" id="nav-feed" onclick="navigateTo('feed')">
+                    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span class="nav-text">Community Stream</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" id="nav-explore" onclick="navigateTo('explore')">
+                    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                    </svg>
+                    <span class="nav-text">Discover &amp; Explore</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item nav-item-vault" id="nav-vault" onclick="navigateTo('vault')">
+                    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <span class="nav-text">LUMA Vault</span>
+                    <span class="pill-secure">Protocol 2.0</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" id="nav-notifications" onclick="navigateTo('notifications')">
+                    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="nav-text">Activity Alerts</span>
+                    <span class="badge-count" id="sidebarNotifBadge" style="display:none;">0</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" id="nav-profile" onclick="navigateTo('profile')">
+                    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span class="nav-text">Identity &amp; Profile</span>
+                </a>
+                <a href="javascript:void(0)" class="nav-item" id="nav-saved" onclick="navigateTo('saved')">
+                    <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span class="nav-text">Bookmarked Archives</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-cta">
+                <button class="btn btn-primary btn-block" onclick="openCreatePostModal()">
+                    <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    </svg>
+                    <span>Publish Update</span>
+                </button>
+                <button class="btn btn-outline-vault btn-block mt-2" onclick="openCreateVaultModal()">
+                    <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span>Archive in Vault</span>
+                </button>
+            </div>
+
+            <!-- Vault System Status Card -->
+            <div class="vault-highlight-card">
+                <div class="vh-header">
+                    <svg class="svg-icon-xs text-vault" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>Time Capsule Protocol</span>
+                </div>
+                <p>Preserve encrypted digital milestones with scheduled chronological unlock triggers.</p>
+                <button class="btn btn-sm btn-vault-subtle" onclick="navigateTo('vault'); switchVaultTab('open-when');">
+                    Inspect Capsules →
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content" id="mainContent">
+
+            <!-- VIEW: FEED -->
+            <section id="view-feed" class="view-section active">
+                <div class="feed-layout">
+                    <div class="feed-stream">
+                        <!-- Feed Filter Switcher -->
+                        <div class="feed-tabs-bar">
+                            <button class="feed-tab-btn active" id="tabFeedAll" onclick="switchFeedType('all')">
+                                Global Publication Feed
+                            </button>
+                            <button class="feed-tab-btn" id="tabFeedFollowing" onclick="switchFeedType('following')">
+                                Verified Network Feed
+                            </button>
+                        </div>
+
+                        <!-- Formal Post Composer Card -->
+                        <div class="composer-card">
+                            <div class="composer-top">
+                                <img src="" alt="Avatar" id="composerAvatar" class="avatar-sm">
+                                <input type="text" id="quickPostInput" placeholder="Publish a moment, technical finding, or announcement..." onclick="openCreatePostModal()">
+                            </div>
+                            <div class="composer-actions">
+                                <button class="btn-composer-action" onclick="openCreatePostModal('photo')">
+                                    <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                    <span>Attachment</span>
+                                </button>
+                                <button class="btn-composer-action" onclick="openCreatePostModal('tag')">
+                                    <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                                    <span>Topic Tag</span>
+                                </button>
+                                <button class="btn-composer-action" onclick="openCreatePostModal('emoji')">
+                                    <span style="font-size: 0.95rem; line-height: 1;">😊</span>
+                                    <span>Emoji</span>
+                                </button>
+                                <button class="btn btn-sm btn-primary ml-auto" onclick="openCreatePostModal()">
+                                    Publish
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Posts Stream Container -->
+                        <div id="postsContainer" class="posts-list">
+                            <div class="loading-spinner">Loading stream...</div>
+                        </div>
+                    </div>
+
+                    <!-- Right Aside Widgets -->
+                    <aside class="feed-aside">
+                        <!-- Current User Mini Card -->
+                        <div class="card widget-user-card" onclick="navigateTo('profile')" style="cursor: pointer;">
+                            <div class="widget-user-avatar-wrap">
+                                <img src="" alt="Avatar" id="widgetAvatar" class="avatar-lg">
+                            </div>
+                            <h4 id="widgetFullName">Loading...</h4>
+                            <p class="widget-username" id="widgetUsername">@username</p>
+                            <p class="widget-bio" id="widgetBio">Bio...</p>
+                            <div class="widget-stats">
+                                <div><strong id="widgetPostsCount">0</strong><span>Posts</span></div>
+                                <div><strong id="widgetFollowersCount">0</strong><span>Followers</span></div>
+                                <div><strong id="widgetFollowingCount">0</strong><span>Following</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Suggested People to Connect With -->
+                        <div class="card widget-card">
+                            <div class="widget-title">
+                                <span>Suggested Connections</span>
+                            </div>
+                            <div id="suggestedUsersContainer" class="suggested-list"></div>
+                        </div>
+
+                        <!-- Verified Topics -->
+                        <div class="card widget-card">
+                            <div class="widget-title">
+                                <span>Trending Index</span>
+                            </div>
+                            <div class="trending-tags">
+                                <div class="tag-pill" onclick="filterByTag('#LUMA')">#LUMA <span>2.4k</span></div>
+                                <div class="tag-pill" onclick="filterByTag('#VisualArts')">#VisualArts <span>1.8k</span></div>
+                                <div class="tag-pill" onclick="filterByTag('#Engineering')">#Engineering <span>1.2k</span></div>
+                                <div class="tag-pill" onclick="filterByTag('#Wanderlust')">#Wanderlust <span>950</span></div>
+                                <div class="tag-pill" onclick="filterByTag('#PrivacyFirst')">#PrivacyFirst <span>840</span></div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- VIEW: EXPLORE -->
+            <section id="view-explore" class="view-section">
+                <div class="explore-header">
+                    <h2>Global Index &amp; Discovery</h2>
+                    <p>Search verified creator publications, architecture discussions, and multimedia records.</p>
+                    <div class="explore-search-box">
+                        <input type="text" id="exploreSearchInput" placeholder="Search keywords, verified usernames, or indexed tags..." onkeyup="handleExploreSearch(event)">
+                        <button class="btn btn-primary" onclick="triggerExploreSearch()">Search</button>
+                    </div>
+                    <div class="tag-filter-row" id="exploreTagRow">
+                        <button class="tag-filter-btn active" onclick="filterExploreTag('')">All Streams</button>
+                        <button class="tag-filter-btn" onclick="filterExploreTag('#VisualArts')">#VisualArts</button>
+                        <button class="tag-filter-btn" onclick="filterExploreTag('#Engineering')">#Engineering</button>
+                        <button class="tag-filter-btn" onclick="filterExploreTag('#Wanderlust')">#Wanderlust</button>
+                        <button class="tag-filter-btn" onclick="filterExploreTag('#LUMA')">#LUMA</button>
+                    </div>
+                </div>
+                <div id="explorePostsGrid" class="posts-grid"></div>
+            </section>
+
+            <!-- VIEW: LUMA VAULT (The Private Space for Expression) -->
+            <section id="view-vault" class="view-section">
+                <!-- Vault Security Gate -->
+                <div id="vaultLockScreen" class="vault-lock-screen">
+                    <div class="vault-lock-box">
+                        <div class="vault-emblem">
+                            <svg class="vault-emblem-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                <circle cx="12" cy="16" r="1.5"></circle>
+                            </svg>
+                        </div>
+                        <h3>LUMA Private Vault</h3>
+                        <p class="vault-lock-subtitle">
+                            Zero-knowledge encrypted repository. All records remain sequestered from public indices and discovery feeds.
+                            Please provide your authenticated Master PIN.
+                        </p>
+                        <div class="pin-entry-container">
+                            <input type="password" id="vaultPinInput" maxlength="6" placeholder="Enter PIN" onkeyup="if(event.key==='Enter') unlockVault()">
+                            <button class="btn btn-vault-action" onclick="unlockVault()">
+                                <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                                <span>Authorize Access</span>
+                            </button>
+                        </div>
+                        <div class="vault-quick-hint">
+                            <span>Demonstration PIN: <strong>1234</strong></span>
+                            <button class="btn-text-vault" onclick="quickFillPin('1234')">Load Demo Key</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vault Unlocked Content -->
+                <div id="vaultMainContent" class="vault-dashboard" style="display: none;">
+                    <div class="vault-header-banner">
+                        <div class="vh-info">
+                            <div class="vh-title-row">
+                                <span class="vault-status-indicator"></span>
+                                <h2>LUMA Vault Control Center</h2>
+                                <span class="badge-vault-secured">
+                                    <svg class="svg-icon-xs text-vault" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                    <span>Encrypted Partition Active</span>
+                                </span>
+                            </div>
+                            <p>Private environment isolated from global queries, feeds, and analytics.</p>
+                        </div>
+                        <div class="vh-actions">
+                            <button class="btn btn-vault-action" onclick="openCreateVaultModal()">
+                                <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <span>Create Entry</span>
+                            </button>
+                            <button class="btn btn-outline-vault" onclick="openCreateCapsuleModal()">
+                                <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                <span>Seal Time Capsule</span>
+                            </button>
+                            <button class="btn btn-vault-lock" onclick="lockVault()">
+                                <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                <span>Lock Session</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Vault Statistics Metrics -->
+                    <div class="vault-metrics-row">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <svg class="svg-icon text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                <span class="metric-lbl">Private Records</span>
+                            </div>
+                            <div class="metric-val" id="metricTotalMemories">0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <svg class="svg-icon text-vault" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                <span class="metric-lbl">Encrypted Items</span>
+                            </div>
+                            <div class="metric-val" id="metricEncrypted">0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <svg class="svg-icon text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                <span class="metric-lbl">Trusted Circle Shares</span>
+                            </div>
+                            <div class="metric-val" id="metricShared">0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <svg class="svg-icon text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                <span class="metric-lbl">Time Capsules</span>
+                            </div>
+                            <div class="metric-val" id="metricCapsules">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Vault Tabs -->
+                    <div class="vault-tabs">
+                        <button class="vault-tab-btn active" id="vtab-memories" onclick="switchVaultTab('memories')">
+                            Encrypted Records
+                        </button>
+                        <button class="vault-tab-btn" id="vtab-openwhen" onclick="switchVaultTab('open-when')">
+                            Time-Locked Capsules
+                        </button>
+                        <button class="vault-tab-btn" id="vtab-shared" onclick="switchVaultTab('shared')">
+                            Delegated Access
+                        </button>
+                        <button class="vault-tab-btn" id="vtab-audit" onclick="switchVaultTab('audit')">
+                            Cryptographic Audit Trail
+                        </button>
+                    </div>
+
+                    <!-- TAB 1: Memories & Feelings -->
+                    <div id="vpanel-memories" class="vault-tab-panel active">
+                        <div class="vault-filter-bar">
+                            <div class="type-filter-group">
+                                <button class="filter-pill active" onclick="filterVaultType('')">All Records</button>
+                                <button class="filter-pill" onclick="filterVaultType('NOTE')">Document Notes</button>
+                                <button class="filter-pill" onclick="filterVaultType('FEELING')">Reflections</button>
+                                <button class="filter-pill" onclick="filterVaultType('MEMORY')">Chronicles</button>
+                                <button class="filter-pill" onclick="filterVaultType('PHOTOGRAPH')">Secured Media</button>
+                                <button class="filter-pill" onclick="filterVaultType('MILESTONE')">Milestones</button>
+                            </div>
+                        </div>
+                        <div id="vaultEntriesContainer" class="vault-grid"></div>
+                    </div>
+
+                    <!-- TAB 2: "Open When" Digital Capsules -->
+                    <div id="vpanel-openwhen" class="vault-tab-panel">
+                        <div class="openwhen-intro">
+                            <div>
+                                <h3>Chronological &amp; Milestone Memory Capsules</h3>
+                                <p>Configurable zero-exposure capsules locked against system timestamps or designated verification keys.</p>
+                            </div>
+                            <button class="btn btn-vault-action" onclick="openCreateCapsuleModal()">
+                                <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <span>Seal Capsule</span>
+                            </button>
+                        </div>
+                        <div class="capsules-subnav">
+                            <button class="capsule-subtab active" id="csubtab-my" onclick="switchCapsuleSubtab('my')">Originating Capsules</button>
+                            <button class="capsule-subtab" id="csubtab-received" onclick="switchCapsuleSubtab('received')">Addressed to Current User</button>
+                        </div>
+                        <div id="openWhenContainer" class="capsules-grid"></div>
+                    </div>
+
+                    <!-- TAB 3: Shared With Me -->
+                    <div id="vpanel-shared" class="vault-tab-panel">
+                        <div class="vault-intro-note">
+                            <p>Private records wherein companion accounts have explicitly granted authorized visibility under the Trusted Circles protocol.</p>
+                        </div>
+                        <div id="vaultSharedContainer" class="vault-grid"></div>
+                    </div>
+
+                    <!-- TAB 4: Security Audit Log -->
+                    <div id="vpanel-audit" class="vault-tab-panel">
+                        <div class="audit-intro">
+                            <h3>Immutable Access &amp; Decryption Audit Trail</h3>
+                            <p>Full audit compliance: System logs PIN validation events, item queries, key generation, and unauthorized attempts with IP stamping.</p>
+                        </div>
+                        <div class="audit-table-wrapper">
+                            <table class="audit-table">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp (UTC)</th>
+                                        <th>Event Classification</th>
+                                        <th>Activity Log Description</th>
+                                        <th>Originating IP</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="auditTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: NOTIFICATIONS -->
+            <section id="view-notifications" class="view-section">
+                <div class="notif-header">
+                    <h2>Activity Alerts &amp; Governance</h2>
+                    <button class="btn btn-sm btn-outline" onclick="markAllNotificationsRead()">Mark all as acknowledged</button>
+                </div>
+                <div id="notificationsContainer" class="notif-list"></div>
+            </section>
+
+            <!-- VIEW: SAVED MOMENTS -->
+            <section id="view-saved" class="view-section">
+                <div class="saved-header">
+                    <h2>Bookmarked Publications</h2>
+                    <p>Referenced publications preserved for ongoing study and inspection.</p>
+                </div>
+                <div id="savedPostsContainer" class="posts-list"></div>
+            </section>
+
+            <!-- VIEW: USER PROFILE -->
+            <section id="view-profile" class="view-section">
+                <div class="profile-header-card">
+                    <div class="profile-cover"></div>
+                    <div class="profile-meta">
+                        <div class="profile-avatar-row">
+                            <img src="" alt="Avatar" id="profilePageAvatar" class="avatar-xl">
+                            <div class="profile-actions-slot" id="profileActionsSlot">
+                                <button class="btn btn-outline" onclick="openEditProfileModal()">Configure Identity</button>
+                            </div>
+                        </div>
+                        <h2 id="profilePageFullName">User Name</h2>
+                        <div class="profile-handle" id="profilePageHandle">@username</div>
+                        <p class="profile-bio" id="profilePageBio">Bio description...</p>
+                        <div class="profile-counts">
+                            <span><strong id="profileCountPosts">0</strong> Publications</span>
+                            <span><strong id="profileCountFollowers">0</strong> Followers</span>
+                            <span><strong id="profileCountFollowing">0</strong> Following</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-tabs">
+                    <button class="profile-tab-btn active" id="ptab-posts" onclick="switchProfileTab('posts')">Publications</button>
+                    <button class="profile-tab-btn" id="ptab-saved" onclick="switchProfileTab('saved')">Archived</button>
+                </div>
+
+                <div id="profilePostsContainer" class="posts-list"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL: CREATE POST -->
+    <div class="modal-backdrop" id="createPostModal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Publish New Update</h3>
+                <button class="modal-close-btn" onclick="closeModal('createPostModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <label>Statement / Publication Text</label>
+                        <button type="button" class="btn-text-vault" onclick="toggleEmojiDrawer()">
+                            <span>😊 Insert Emojis</span>
+                        </button>
+                    </div>
+                    <textarea id="postCaptionInput" rows="4" placeholder="Detail your thoughts, findings, or community notice..."></textarea>
+                    
+                    <!-- Quick Emoji Bar -->
+                    <div class="emoji-quick-bar">
+                        <span class="emoji-chip" onclick="insertEmoji('✨')">✨</span>
+                        <span class="emoji-chip" onclick="insertEmoji('🔥')">🔥</span>
+                        <span class="emoji-chip" onclick="insertEmoji('💡')">💡</span>
+                        <span class="emoji-chip" onclick="insertEmoji('🌿')">🌿</span>
+                        <span class="emoji-chip" onclick="insertEmoji('🚀')">🚀</span>
+                        <span class="emoji-chip" onclick="insertEmoji('❤️')">❤️</span>
+                        <span class="emoji-chip" onclick="insertEmoji('📸')">📸</span>
+                        <span class="emoji-chip" onclick="insertEmoji('☕')">☕</span>
+                        <span class="emoji-chip" onclick="insertEmoji('🎉')">🎉</span>
+                        <span class="emoji-chip" onclick="insertEmoji('🌟')">🌟</span>
+                        <span class="emoji-chip" onclick="insertEmoji('💭')">💭</span>
+                        <span class="emoji-chip" onclick="insertEmoji('🎯')">🎯</span>
+                        <span class="emoji-chip" onclick="insertEmoji('🎨')">🎨</span>
+                        <span class="emoji-chip" onclick="insertEmoji('💻')">💻</span>
+                    </div>
+
+                    <!-- Expandable Categorized Emoji Drawer -->
+                    <div id="emojiDrawer" class="emoji-drawer" style="display: none;">
+                        <div class="emoji-drawer-header">
+                            <span class="emoji-cat active" onclick="switchEmojiCategory('vibes')">Vibes</span>
+                            <span class="emoji-cat" onclick="switchEmojiCategory('faces')">Expressions</span>
+                            <span class="emoji-cat" onclick="switchEmojiCategory('nature')">Nature</span>
+                            <span class="emoji-cat" onclick="switchEmojiCategory('work')">Work &amp; Tech</span>
+                        </div>
+                        <div id="emojiDrawerGrid" class="emoji-drawer-grid"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Attachment URL (Optional)</label>
+                    <input type="text" id="postImageUrlInput" placeholder="https://images.unsplash.com/..." oninput="onPostMediaUrlChanged(this.value)">
+                </div>
+
+                <div class="form-group">
+                    <label>Or Upload Local File (Photo or Video)</label>
+                    <input type="file" id="postFileInput" accept="image/*,video/*" onchange="handleFileUpload(this, 'postImageUrlInput')">
+                </div>
+
+                <!-- Live Media Preview & Studio Trigger -->
+                <div id="postMediaPreviewWrap" class="media-preview-banner" style="display: none;">
+                    <div class="mp-thumb-container">
+                        <img id="postMediaPreviewImg" src="" alt="Thumbnail" class="mp-thumb">
+                        <div class="mp-info">
+                            <strong id="postMediaPreviewTitle">Media Attached</strong>
+                            <span>Ready to publish or edit</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-vault" onclick="openMediaStudio()">
+                        <span>🎨 Open Studio Editor</span>
+                    </button>
+                </div>
+
+                <!-- Location Tagger -->
+                <div class="form-group">
+                    <label>Location Tag (Optional)</label>
+                    <div class="location-input-wrap">
+                        <svg class="svg-icon-xs text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <input type="text" id="postLocationInput" placeholder="e.g. San Francisco, CA | Kyoto, Japan | Studio HQ">
+                    </div>
+                    <div class="location-chips-row">
+                        <span class="loc-chip" onclick="selectLocation('San Francisco, CA')">📍 San Francisco</span>
+                        <span class="loc-chip" onclick="selectLocation('Kyoto, Japan')">📍 Kyoto</span>
+                        <span class="loc-chip" onclick="selectLocation('Tokyo, Japan')">📍 Tokyo</span>
+                        <span class="loc-chip" onclick="selectLocation('New York, NY')">📍 New York</span>
+                        <span class="loc-chip" onclick="selectLocation('Studio HQ')">📍 Studio HQ</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Categorical Tag</label>
+                    <input type="text" id="postTagInput" placeholder="#Engineering, #VisualArts, #Architecture">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('createPostModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitCreatePost()">Publish to Stream</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: LUMA PHOTO & MEDIA STUDIO (Filters, Effects, Crop, Stickers) -->
+    <div class="modal-backdrop" id="mediaStudioModal" style="display: none;">
+        <div class="modal-card modal-studio-card">
+            <div class="modal-header">
+                <div class="vault-modal-title">
+                    <svg class="svg-icon text-vault" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                    <h3>LUMA Media Studio Editor</h3>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal('mediaStudioModal')">×</button>
+            </div>
+            <div class="modal-body studio-body">
+                <!-- Studio Canvas & Live Preview Viewport -->
+                <div class="studio-viewport-wrap">
+                    <div id="studioCanvasContainer" class="studio-canvas-container aspect-original">
+                        <img id="studioTargetImage" src="" alt="Studio Target" class="studio-image">
+                        <!-- Placed Sticker Overlay -->
+                        <div id="studioStickerOverlay" class="studio-sticker-overlay" style="display: none;">
+                            <span id="studioStickerText">✨ LUMA VIBE</span>
+                            <button type="button" class="sticker-remove-btn" onclick="removeSticker()">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Studio Control Tabs -->
+                <div class="studio-controls-sidebar">
+                    <div class="studio-tabs-row">
+                        <button type="button" class="studio-tab-btn active" id="stab-filters" onclick="switchStudioTab('filters')">Filters</button>
+                        <button type="button" class="studio-tab-btn" id="stab-effects" onclick="switchStudioTab('effects')">Effects</button>
+                        <button type="button" class="studio-tab-btn" id="stab-crop" onclick="switchStudioTab('crop')">Aspect Ratio</button>
+                        <button type="button" class="studio-tab-btn" id="stab-stickers" onclick="switchStudioTab('stickers')">Stickers</button>
+                    </div>
+
+                    <!-- TAB 1: FILTERS -->
+                    <div id="spanel-filters" class="studio-panel active">
+                        <div class="filters-grid">
+                            <div class="filter-card active" onclick="applyFilterPreset('normal', this)">
+                                <span>Normal</span>
+                            </div>
+                            <div class="filter-card" onclick="applyFilterPreset('cinematic', this)">
+                                <span>Cinematic</span>
+                            </div>
+                            <div class="filter-card" onclick="applyFilterPreset('vintage', this)">
+                                <span>Vintage Sepia</span>
+                            </div>
+                            <div class="filter-card" onclick="applyFilterPreset('noir', this)">
+                                <span>Noir B&amp;W</span>
+                            </div>
+                            <div class="filter-card" onclick="applyFilterPreset('golden', this)">
+                                <span>Warm Glow</span>
+                            </div>
+                            <div class="filter-card" onclick="applyFilterPreset('cyber', this)">
+                                <span>Cyber Neon</span>
+                            </div>
+                            <div class="filter-card" onclick="applyFilterPreset('matte', this)">
+                                <span>Matte Film</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: EFFECTS & ADJUSTMENTS -->
+                    <div id="spanel-effects" class="studio-panel">
+                        <div class="effect-slider-item">
+                            <div class="slider-label-row">
+                                <span>Brightness</span>
+                                <span id="valBrightness">100%</span>
+                            </div>
+                            <input type="range" min="50" max="150" value="100" id="sliderBrightness" oninput="updateEffect('brightness', this.value)">
+                        </div>
+                        <div class="effect-slider-item">
+                            <div class="slider-label-row">
+                                <span>Contrast</span>
+                                <span id="valContrast">100%</span>
+                            </div>
+                            <input type="range" min="50" max="160" value="100" id="sliderContrast" oninput="updateEffect('contrast', this.value)">
+                        </div>
+                        <div class="effect-slider-item">
+                            <div class="slider-label-row">
+                                <span>Saturation</span>
+                                <span id="valSaturate">100%</span>
+                            </div>
+                            <input type="range" min="0" max="200" value="100" id="sliderSaturate" oninput="updateEffect('saturate', this.value)">
+                        </div>
+                        <div class="effect-slider-item">
+                            <div class="slider-label-row">
+                                <span>Soft Blur</span>
+                                <span id="valBlur">0px</span>
+                            </div>
+                            <input type="range" min="0" max="8" value="0" id="sliderBlur" oninput="updateEffect('blur', this.value)">
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline mt-2" onclick="resetStudioEffects()">Reset Adjustments</button>
+                    </div>
+
+                    <!-- TAB 3: ASPECT RATIO / CROP -->
+                    <div id="spanel-crop" class="studio-panel">
+                        <div class="aspect-ratio-grid">
+                            <button type="button" class="aspect-btn active" onclick="setAspectRatio('original', this)">Original Frame</button>
+                            <button type="button" class="aspect-btn" onclick="setAspectRatio('square', this)">1:1 Square</button>
+                            <button type="button" class="aspect-btn" onclick="setAspectRatio('portrait', this)">4:5 Portrait</button>
+                            <button type="button" class="aspect-btn" onclick="setAspectRatio('landscape', this)">16:9 Landscape</button>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: STICKERS & BADGES -->
+                    <div id="spanel-stickers" class="studio-panel">
+                        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.6rem;">Click a badge to overlay on image:</p>
+                        <div class="stickers-grid">
+                            <div class="sticker-chip" onclick="placeSticker('✨ LUMA VIBE')">✨ LUMA VIBE</div>
+                            <div class="sticker-chip" onclick="placeSticker('📸 35mm FILM')">📸 35mm FILM</div>
+                            <div class="sticker-chip" onclick="placeSticker('☕ COFFEE &amp; CODE')">☕ COFFEE &amp; CODE</div>
+                            <div class="sticker-chip" onclick="placeSticker('🌿 CALM &amp; FOCUS')">🌿 CALM &amp; FOCUS</div>
+                            <div class="sticker-chip" onclick="placeSticker('🌟 GOLDEN HOUR')">🌟 GOLDEN HOUR</div>
+                            <div class="sticker-chip" onclick="placeSticker('🎯 MILESTONE')">🎯 MILESTONE</div>
+                            <div class="sticker-chip" onclick="placeSticker('📍 EXPLORE')">📍 EXPLORE</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('mediaStudioModal')">Cancel</button>
+                <button class="btn btn-vault-action" onclick="saveStudioEdits()">Apply Edits to Post ✨</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CREATE VAULT ENTRY -->
+    <div class="modal-backdrop" id="createVaultModal" style="display: none;">
+        <div class="modal-card modal-vault-card">
+            <div class="modal-header">
+                <div class="vault-modal-title">
+                    <svg class="svg-icon text-vault" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <h3>Secure New Vault Artifact</h3>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal('createVaultModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Artifact Title</label>
+                    <input type="text" id="vaultTitleInput" placeholder="e.g. Architecture Blueprint, Strategy Document">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>Artifact Category</label>
+                        <select id="vaultTypeSelect">
+                            <option value="NOTE">Document Note</option>
+                            <option value="FEELING">Personal Reflection</option>
+                            <option value="MEMORY">Historical Chronicle</option>
+                            <option value="PHOTOGRAPH">Confidential Media</option>
+                            <option value="MILESTONE">Target Milestone</option>
+                            <option value="VIDEO">Video Record</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-6">
+                        <label>State Code / Tag</label>
+                        <input type="text" id="vaultMoodInput" placeholder="STABLE, FOCUS, MILESTONE" maxlength="12">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <label>Confidential Payload (Encrypted at Rest)</label>
+                        <button type="button" class="btn-text-vault" onclick="toggleEmojiDrawerFor('vaultContentInput', 'vaultEmojiDrawer', 'vaultEmojiGrid')">
+                            <span>😊 Insert Emojis</span>
+                        </button>
+                    </div>
+                    <textarea id="vaultContentInput" rows="5" placeholder="Confidential payload content shielded from public search..."></textarea>
+                    
+                    <!-- Quick Emoji Bar for Vault -->
+                    <div class="emoji-quick-bar">
+                        <span class="emoji-chip" onclick="insertEmojiTo('vaultContentInput', '🔐')">🔐</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('vaultContentInput', '💭')">💭</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('vaultContentInput', '🌱')">🌱</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('vaultContentInput', '🎯')">🎯</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('vaultContentInput', '💡')">💡</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('vaultContentInput', '✨')">✨</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('vaultContentInput', '🌿')">🌿</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('vaultContentInput', '📜')">📜</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('vaultContentInput', '🔑')">🔑</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('vaultContentInput', '⭐')">⭐</span>
+                    </div>
+
+                    <!-- Expandable Emoji Drawer for Vault -->
+                    <div id="vaultEmojiDrawer" class="emoji-drawer" style="display: none;">
+                        <div class="emoji-drawer-header">
+                            <span class="emoji-cat active" onclick="switchDrawerEmojiCat('vaultContentInput', 'vaultEmojiGrid', 'vibes', this)">Vibes</span>
+                            <span class="emoji-cat" onclick="switchDrawerEmojiCat('vaultContentInput', 'vaultEmojiGrid', 'faces', this)">Expressions</span>
+                            <span class="emoji-cat" onclick="switchDrawerEmojiCat('vaultContentInput', 'vaultEmojiGrid', 'nature', this)">Nature</span>
+                            <span class="emoji-cat" onclick="switchDrawerEmojiCat('vaultContentInput', 'vaultEmojiGrid', 'work', this)">Work &amp; Tech</span>
+                        </div>
+                        <div id="vaultEmojiGrid" class="emoji-drawer-grid"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Attachment Resource URL (Optional)</label>
+                    <input type="text" id="vaultMediaUrlInput" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label>Or Upload Confidential File (Photo or Video)</label>
+                    <input type="file" id="vaultFileInput" accept="image/*,video/*" onchange="handleFileUpload(this, 'vaultMediaUrlInput')">
+                </div>
+                <div class="form-group">
+                    <label>Granular Visibility Protocol</label>
+                    <select id="vaultVisibilitySelect" onchange="toggleVaultVisibilityFields(this.value)">
+                        <option value="PRIVATE">Strictly Private (Owner Authentication Only)</option>
+                        <option value="TRUSTED_CIRCLE">Trusted Circles (Delegated Companion Access)</option>
+                        <option value="TEMPORARY_ACCESS">Temporary Time-Window (Automated Revocation)</option>
+                    </select>
+                </div>
+                <div class="form-group" id="vaultTrustedUsersGroup" style="display: none;">
+                    <label>Permitted Usernames (Comma separated)</label>
+                    <input type="text" id="vaultTrustedUsersInput" placeholder="sarah_art, alex_dev">
+                </div>
+                <div class="form-group" id="vaultExpiryGroup" style="display: none;">
+                    <label>Automated Revocation Timestamp</label>
+                    <input type="datetime-local" id="vaultExpiresAtInput">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('createVaultModal')">Cancel</button>
+                <button class="btn btn-vault-action" onclick="submitCreateVaultEntry()">Commit to Vault</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CREATE OPEN WHEN CAPSULE -->
+    <div class="modal-backdrop" id="createCapsuleModal" style="display: none;">
+        <div class="modal-card modal-vault-card">
+            <div class="modal-header">
+                <div class="vault-modal-title">
+                    <svg class="svg-icon text-vault" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <h3>Configure Time-Locked Capsule</h3>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal('createCapsuleModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Capsule Milestone Title</label>
+                    <input type="text" id="capsuleTitleInput" placeholder="e.g. Open Upon Completion of Degree, Open on Launch Day">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>Occasion Classification</label>
+                        <select id="capsuleOccasionSelect">
+                            <option value="FUTURE_SELF">Future Self Protocol</option>
+                            <option value="BIRTHDAY">Annual Birthday</option>
+                            <option value="GRADUATION">Academic Graduation</option>
+                            <option value="ANNIVERSARY">Institutional Anniversary</option>
+                            <option value="MILESTONE">Project Milestone</option>
+                            <option value="EMOTIONAL_SUPPORT">Encouragement Directive</option>
+                            <option value="CUSTOM">Custom Occasion</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Designated Recipient (Self if blank)</label>
+                        <input type="text" id="capsuleRecipientInput" placeholder="@username or leave blank">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <label>Sealed Emotional / Technical Message</label>
+                        <button type="button" class="btn-text-vault" onclick="toggleEmojiDrawerFor('capsuleMessageInput', 'capsuleEmojiDrawer', 'capsuleEmojiGrid')">
+                            <span>😊 Insert Emojis</span>
+                        </button>
+                    </div>
+                    <textarea id="capsuleMessageInput" rows="5" placeholder="Locked message sealed until condition verification..."></textarea>
+
+                    <!-- Quick Emoji Bar for Capsules -->
+                    <div class="emoji-quick-bar">
+                        <span class="emoji-chip" onclick="insertEmojiTo('capsuleMessageInput', '⏳')">⏳</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('capsuleMessageInput', '🎁')">🎁</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('capsuleMessageInput', '💖')">💖</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('capsuleMessageInput', '🎓')">🎓</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('capsuleMessageInput', '🎂')">🎂</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('capsuleMessageInput', '🌟')">🌟</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('capsuleMessageInput', '💌')">💌</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('capsuleMessageInput', '✨')">✨</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('capsuleMessageInput', '🏆')">🏆</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('capsuleMessageInput', '🌸')">🌸</span>
+                    </div>
+
+                    <!-- Expandable Emoji Drawer for Capsules -->
+                    <div id="capsuleEmojiDrawer" class="emoji-drawer" style="display: none;">
+                        <div class="emoji-drawer-header">
+                            <span class="emoji-cat active" onclick="switchDrawerEmojiCat('capsuleMessageInput', 'capsuleEmojiGrid', 'vibes', this)">Vibes</span>
+                            <span class="emoji-cat" onclick="switchDrawerEmojiCat('capsuleMessageInput', 'capsuleEmojiGrid', 'faces', this)">Expressions</span>
+                            <span class="emoji-cat" onclick="switchDrawerEmojiCat('capsuleMessageInput', 'capsuleEmojiGrid', 'nature', this)">Nature</span>
+                            <span class="emoji-cat" onclick="switchDrawerEmojiCat('capsuleMessageInput', 'capsuleEmojiGrid', 'work', this)">Milestones</span>
+                        </div>
+                        <div id="capsuleEmojiGrid" class="emoji-drawer-grid"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Sealed Media Attachment URL (Optional)</label>
+                    <input type="text" id="capsuleMediaUrlInput" placeholder="https://...">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>Chronological Unlock Timestamp</label>
+                        <input type="datetime-local" id="capsuleUnlockDateInput">
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Manual Bypass Passcode (Optional)</label>
+                        <input type="text" id="capsulePasscodeInput" placeholder="Cryptographic passcode">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Public Verification Hint</label>
+                    <input type="text" id="capsuleHintInput" placeholder="e.g. Sealed during the Q4 architecture review...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('createCapsuleModal')">Cancel</button>
+                <button class="btn btn-vault-action" onclick="submitCreateCapsule()">Seal Memory Capsule</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: REVEAL CAPSULE -->
+    <div class="modal-backdrop" id="revealCapsuleModal" style="display: none;">
+        <div class="modal-card modal-vault-card capsule-reveal-card">
+            <div class="capsule-reveal-header">
+                <div class="reveal-badge-wrap">
+                    <svg class="svg-icon text-vault" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    <span class="badge-unlocked">VERIFIED &amp; UNLOCKED</span>
+                </div>
+                <h3 id="revealCapsuleTitle">Capsule Title</h3>
+                <button class="modal-close-btn" onclick="closeModal('revealCapsuleModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="reveal-meta" id="revealCapsuleMeta"></div>
+                <div class="reveal-message-box">
+                    <p id="revealCapsuleMessage"></p>
+                </div>
+                <div id="revealCapsuleMediaWrap" class="reveal-media-wrap" style="display: none;">
+                    <img src="" id="revealCapsuleImage" alt="Locked Attachment">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-vault-action" onclick="closeModal('revealCapsuleModal')">Acknowledge</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: COMMENTS DRAWER -->
+    <div class="modal-backdrop" id="commentsModal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Threaded Discussions</h3>
+                <button class="modal-close-btn" onclick="closeModal('commentsModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="commentsListContainer" class="comments-list"></div>
+
+                <!-- Quick Comment Emoji Bar -->
+                <div class="emoji-quick-bar comment-emoji-bar">
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '❤️')">❤️</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '🔥')">🔥</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '👏')">👏</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '🙌')">🙌</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '✨')">✨</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '💡')">💡</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '😍')">😍</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '😂')">😂</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '🎉')">🎉</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '💯')">💯</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '👍')">👍</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '🚀')">🚀</span>
+                    <span class="emoji-chip" onclick="insertEmojiTo('newCommentInput', '☕')">☕</span>
+                    <button type="button" class="btn-text-vault ml-auto" onclick="toggleEmojiDrawerFor('newCommentInput', 'commentEmojiDrawer', 'commentEmojiGrid')">
+                        <span>More 😊</span>
+                    </button>
+                </div>
+
+                <!-- Expandable Categorized Emoji Drawer for Comments -->
+                <div id="commentEmojiDrawer" class="emoji-drawer" style="display: none; margin-bottom: 0.75rem;">
+                    <div class="emoji-drawer-header">
+                        <span class="emoji-cat active" onclick="switchDrawerEmojiCat('newCommentInput', 'commentEmojiGrid', 'vibes', this)">Vibes</span>
+                        <span class="emoji-cat" onclick="switchDrawerEmojiCat('newCommentInput', 'commentEmojiGrid', 'faces', this)">Expressions</span>
+                        <span class="emoji-cat" onclick="switchDrawerEmojiCat('newCommentInput', 'commentEmojiGrid', 'nature', this)">Food &amp; Nature</span>
+                        <span class="emoji-cat" onclick="switchDrawerEmojiCat('newCommentInput', 'commentEmojiGrid', 'work', this)">Work &amp; Tech</span>
+                    </div>
+                    <div id="commentEmojiGrid" class="emoji-drawer-grid"></div>
+                </div>
+
+                <div class="comment-composer">
+                    <input type="text" id="newCommentInput" placeholder="Write a response..." onkeyup="if(event.key==='Enter') submitComment()">
+                    <button class="btn btn-primary" onclick="submitComment()">Reply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: FULL-SCREEN MEDIA LIGHTBOX (Entire Uncropped Photo/Video Inspection) -->
+    <div class="modal-backdrop modal-backdrop-lightbox" id="mediaLightboxModal" style="display: none;" onclick="closeModal('mediaLightboxModal')">
+        <div class="modal-card modal-lightbox-card" onclick="event.stopPropagation()">
+            <div class="lightbox-header">
+                <div class="lightbox-author-info">
+                    <img id="lightboxAuthorAvatar" src="" class="avatar-sm" alt="Author">
+                    <div>
+                        <strong id="lightboxAuthorName">Author</strong>
+                        <span id="lightboxAuthorHandle">@username</span>
+                    </div>
+                </div>
+                <div class="lightbox-actions">
+                    <a id="lightboxDownloadBtn" href="" target="_blank" download class="btn-icon-subtle" title="Open Original Media in Full Resolution">
+                        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    </a>
+                    <button class="modal-close-btn" onclick="closeModal('mediaLightboxModal')">×</button>
+                </div>
+            </div>
+            <div class="lightbox-body">
+                <img id="lightboxImg" src="" alt="Full Resolution View" class="lightbox-media-img" style="display: none;">
+                <video id="lightboxVideo" src="" controls playsinline autoplay class="lightbox-media-video" style="display: none;"></video>
+            </div>
+            <div class="lightbox-footer" id="lightboxCaptionWrap" style="display: none;">
+                <p id="lightboxCaption" class="lightbox-caption-text"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: EDIT PROFILE -->
+    <div class="modal-backdrop" id="editProfileModal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Identity Settings</h3>
+                <button class="modal-close-btn" onclick="closeModal('editProfileModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Display Full Name</label>
+                    <input type="text" id="editFullNameInput">
+                </div>
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <label>Professional Bio</label>
+                        <button type="button" class="btn-text-vault" onclick="toggleEmojiDrawerFor('editBioInput', 'bioEmojiDrawer', 'bioEmojiGrid')">
+                            <span>😊 Insert Emojis</span>
+                        </button>
+                    </div>
+                    <textarea id="editBioInput" rows="3"></textarea>
+
+                    <!-- Quick Emoji Bar for Bio -->
+                    <div class="emoji-quick-bar">
+                        <span class="emoji-chip" onclick="insertEmojiTo('editBioInput', '✨')">✨</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('editBioInput', '💻')">💻</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('editBioInput', '🎨')">🎨</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('editBioInput', '🚀')">🚀</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('editBioInput', '🌱')">🌱</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('editBioInput', '☕')">☕</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('editBioInput', '📍')">📍</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('editBioInput', '💡')">💡</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('editBioInput', '📸')">📸</span>
+                        <span class="emoji-chip" onclick="insertEmojiTo('editBioInput', '📚')">📚</span>
+                    </div>
+
+                    <!-- Expandable Emoji Drawer for Bio -->
+                    <div id="bioEmojiDrawer" class="emoji-drawer" style="display: none;">
+                        <div class="emoji-drawer-header">
+                            <span class="emoji-cat active" onclick="switchDrawerEmojiCat('editBioInput', 'bioEmojiGrid', 'vibes', this)">Vibes</span>
+                            <span class="emoji-cat" onclick="switchDrawerEmojiCat('editBioInput', 'bioEmojiGrid', 'faces', this)">Expressions</span>
+                            <span class="emoji-cat" onclick="switchDrawerEmojiCat('editBioInput', 'bioEmojiGrid', 'nature', this)">Nature</span>
+                            <span class="emoji-cat" onclick="switchDrawerEmojiCat('editBioInput', 'bioEmojiGrid', 'work', this)">Work &amp; Tech</span>
+                        </div>
+                        <div id="bioEmojiGrid" class="emoji-drawer-grid"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Avatar Resource URL</label>
+                    <input type="text" id="editAvatarUrlInput">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('editProfileModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitEditProfile()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CHANGE VAULT PIN -->
+    <div class="modal-backdrop" id="changePinModal" style="display: none;">
+        <div class="modal-card modal-vault-card">
+            <div class="modal-header">
+                <h3>Configure Vault Master PIN</h3>
+                <button class="modal-close-btn" onclick="closeModal('changePinModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>New 4 to 6-Digit Numeric Key</label>
+                    <input type="password" id="newPinInput" maxlength="6" placeholder="Enter new numeric key">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('changePinModal')">Cancel</button>
+                <button class="btn btn-vault-action" onclick="submitChangePin()">Save Key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- JavaScript Application Modules -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/feed.js"></script>
+    <script src="js/vault.js"></script>
+    <script src="js/openwhen.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
